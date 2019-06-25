@@ -4,6 +4,7 @@ import cvlib as cv
 from glob import glob
 from multiprocessing import Process
 import time
+import pickle
 
 class preprocess:
     file_list = []
@@ -15,6 +16,7 @@ class preprocess:
     def process(self):
         # save and preprocess
         for idx, f in enumerate(self.file_list):
+            d = {}
             if f not in self.yolo_res:
                 img = np.asarray(Image.open(f))
                 bbox, labels, confidence = cv.detect_common_objects(img)
@@ -23,12 +25,10 @@ class preprocess:
                     'bbox': bbox,
                     'labels': labels,
                     'confidence': confidence,
-                    'img': img,
+                    # 'img': img,
                 }
 
-                self.yolo_res[f] = d
-
-            yield (idx, len(self.file_list))
+            yield (idx, len(self.file_list), f, d)
 
 def f(p):
     for i in p.process():

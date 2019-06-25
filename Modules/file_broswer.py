@@ -3,6 +3,7 @@
 import bimpy
 from glob import glob
 from multiprocessing import Process, Queue
+import pickle
 
 from Modules.i18n import LANG_EN as LANG
 from Modules.conf import conf
@@ -19,10 +20,10 @@ class file_broswer:
     def refresh_file_list(self):
         self.file_list = glob('pictures\*.*')
 
-    def startprocess(self):
         self.pp = preprocess()
         self.pp.update_file_list(self.file_list)
 
+    def startprocess(self):
         p = Process(target=self.preprocess, args=(self.pp, self.q))
         p.start()
 
@@ -79,7 +80,17 @@ class file_brewswer_ui:
         # progress bar
         if not self.fb.q.empty():
             self.process = self.fb.q.get()
+
+            f, d = self.process[-2], self.process[-1]
+            # update if new
+            if d != {}:
+                self.fb.pp.yolo_res[f] = d
+
             self.process = (self.process[0] + 1, self.process[1])
+
+            if self.process[0] == self.process[1]:
+                with open('yolo_res', 'wb') as f:
+                    pickle.dump(self.fb.pp.yolo_res, f)
 
         sz = bimpy.get_window_size()
         bimpy.set_cursor_pos(bimpy.Vec2(conf.margin, sz.y - conf.margin * 2))
