@@ -19,7 +19,7 @@
 
 - [Introduction](#introduction)
 - [Usage](#usage)
-- [Technology Stack](#Technology Stack)
+- [Technology Stack](#Technology-Stack)
 - [About](#about)
 
 ## Introduction
