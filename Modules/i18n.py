@@ -12,6 +12,7 @@ class LANG_EN:
     image_shower_ui_title = 'Image Displayer'
     click_to_view_more = 'View similar images'
     smart_analyse = 'AI Analyse'
+    drag = 'Drag to Resize'
 
     ####meta_info####
     meta_size = 'Size'
@@ -32,12 +33,13 @@ class LANG_EN:
     about_close = 'Close'
     about_content = 'The Smart Picture Manager (SPM) embraces the ' \
                     'recent advances of deep learning (DL), and provide ' \
-                    'a unified software experience in SMP. \n\n ' \
+                    'a unified software experience for managing personal photos. \n\n ' \
                     'Features of SMP:\n' \
                     '* Easy-to-use User Interaction\n' \
-                    '* AI analyser based on CPU DL models\n' \
+                    '* AI photo analyser\n' \
                     '* One-key photo semantic match\n' \
                     '\n' \
-                    '\n' \
                     'Besides, this software is an coursework for "Programming Designment Training" and the instructor is Heng, Qi\n' \
-                    '\n'
+                    '\n' \
+                    'Author: Chengxuan, Ying\n' \
+                    'Last Update: 6.25.2019'

@@ -17,7 +17,7 @@ class about_ui:
         return t
 
     def about(self):
-        size = bimpy.Vec2(450, 370)
+        size = bimpy.Vec2(450, 400)
         bimpy.set_next_window_size(size,
                                    bimpy.Condition.Once)
 

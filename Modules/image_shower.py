@@ -45,11 +45,16 @@ class image_shower_ui:
     im = None
     labels = None
 
+    now_im =None
+
+    scale = bimpy.Float(100.0)
+    last_scale = 100.0
+
     def render(self, ctx, windows_info):
         # calculate autoly
         self.pos = bimpy.Vec2(windows_info['file_brewswer_ui']['x'] +
-                         windows_info['file_brewswer_ui']['w'] + conf.margin,
-                         conf.margin)
+                              windows_info['file_brewswer_ui']['w'] + conf.margin,
+                              conf.margin)
 
         self.size = bimpy.Vec2(ctx.width() - self.pos.x - conf.margin,
                                ctx.height() - 3 * conf.margin - conf.meta_info_height)
@@ -60,7 +65,8 @@ class image_shower_ui:
         bimpy.begin(LANG.image_shower_ui_title, bimpy.Bool(True),
                     bimpy.WindowFlags.NoCollapse |
                     bimpy.WindowFlags.NoMove |
-                    bimpy.WindowFlags.NoResize)
+                    bimpy.WindowFlags.NoResize |
+                    bimpy.WindowFlags.HorizontalScrollbar)
 
         ###########UI###########
 
@@ -103,10 +109,29 @@ class image_shower_ui:
                         print(22)
                     bimpy.pop_id()
 
-            bimpy.set_cursor_pos(bimpy.Vec2(conf.margin, self.size.y - conf.margin * 2))
+            # bimpy.set_cursor_pos(bimpy.Vec2(conf.margin, self.size.y - conf.margin * 2))
+            bimpy.set_cursor_pos(bimpy.Vec2(conf.margin, conf.margin * 1.5))
             if bimpy.button(LANG.smart_analyse) == True:
-
                 self.object_detection()
+
+            bimpy.same_line()
+            bimpy.drag_float(LANG.drag, self.scale,
+                             1.0, 10, 1000)
+
+            if self.last_scale != self.scale.value:
+                xx = self.size.x * self.scale.value / 100.
+                yy = (self.size.y - 43) * self.scale.value / 100.
+
+                im = self.i_s.resize(self.raw_im,
+                                     xx,
+                                     yy)
+                self.now_im = im
+                self.set_im(im)
+
+                # set to save computation
+                self.last_scale = self.scale.value
+            # if bimpy.button('123') == True:
+
 
         ########################
 
@@ -123,17 +148,23 @@ class image_shower_ui:
         return t
 
     def update_pic(self, f_name):
+        # init
+        self.scale = bimpy.Float(100.0)
+        self.last_scale = 100.0
+
         # resize and update pic by message
         im = Image.open(f_name)
-        im = self.i_s.resize(im, self.size.x, self.size.y - 43)
         self.raw_im = im
+
+        im = self.i_s.resize(im, self.size.x, self.size.y - 43)
+        self.now_im = im
         self.set_im(im)
 
         # reset
         self.labels = None
 
     def object_detection(self):
-        img = np.asarray(self.raw_im)
+        img = np.asarray(self.now_im)
 
         self.bbox, self.labels, self.confidence = cv.detect_common_objects(img)
 
