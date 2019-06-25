@@ -3,6 +3,7 @@
 import bimpy
 from glob import glob
 
+
 from Modules.i18n import LANG_EN as LANG
 from Modules.conf import conf
 
@@ -50,6 +51,8 @@ class file_brewswer_ui:
                 if self.selected.value != -1 and self.selected.value != self.preidx:
                     self.preidx = self.selected.value
                     windows_info['image_shower_ui']['self'].update_pic(f_name)
+                    windows_info['meta_info_ui']['self'].update_meta_info(f_name)
+
 
 
         ########################
