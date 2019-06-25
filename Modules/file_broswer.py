@@ -27,13 +27,16 @@ class file_brewswer_ui:
 
     def render(self, ctx, windows_info):
         pos = bimpy.Vec2(conf.margin, conf.margin)
-        size_min = bimpy.Vec2(conf.min_file_browser_width, ctx.height() - 2 * conf.margin)
-        size_max = bimpy.Vec2(conf.max_file_browser_width, ctx.height() - 2 * conf.margin)
+        size_min = bimpy.Vec2(conf.min_file_browser_width,
+                              ctx.height() - 2 * conf.margin)
+        size_max = bimpy.Vec2(conf.max_file_browser_width,
+                              ctx.height() - 2 * conf.margin)
 
         bimpy.set_next_window_pos(pos, bimpy.Condition.Once)
         bimpy.set_next_window_size_constraints(size_min, size_max)
 
-        bimpy.begin(LANG.file_brewswer_ui_title, bimpy.Bool(True), bimpy.WindowFlags.NoCollapse |
+        bimpy.begin(LANG.file_brewswer_ui_title, bimpy.Bool(True),
+                    bimpy.WindowFlags.NoCollapse |
                     bimpy.WindowFlags.NoMove)
 
         ###########UI###########
@@ -47,14 +50,9 @@ class file_brewswer_ui:
 
                 if self.selected.value != -1 and self.selected.value != self.preidx:
                     self.preidx = self.selected.value
-                    self.im = bimpy.Image(Image.open(f_name))
+                    windows_info['image_shower_ui']['self'].update_pic(Image.open(f_name))
 
 
-
-        # for idx, f_name in enumerate(self.fb.file_list):
-        #     bimpy.selectable(f_name.split('\\')[-1], self.selected[idx])
-        #     bimpy.same_line(300)
-        #     bimpy.text('123')
         ########################
 
         t = {
