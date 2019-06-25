@@ -3,7 +3,9 @@
 import bimpy
 from PIL import Image
 import numpy as np
-import time
+import cv2
+import cvlib as cv
+from cvlib.object_detection import populate_class_labels
 
 from Modules.i18n import LANG_EN as LANG
 from Modules.conf import conf
@@ -57,9 +59,47 @@ class image_shower_ui:
                     bimpy.WindowFlags.NoResize)
 
         ###########UI###########
-
         if self.im is not None:
             bimpy.image(self.im)
+
+            # if image is loaded
+            for i, label in enumerate(self.labels):
+                color = self.COLORS[self.classes.index(label)]
+
+
+
+                # print((self.bbox[i][0], self.bbox[i][1] - 10))
+
+                # show on the left bottom of the picture
+                bimpy.set_cursor_pos(bimpy.Vec2(self.bbox[i][0] + 10
+                                                , self.bbox[i][3] + 10))
+
+                # set style
+                bimpy.push_id_int(i)
+
+                if conf.show_yolo_confience:
+                    bimpy.button(label + ' ' +
+                                 str(format(self.confidence[i] * 100, '.2f')) + '%')
+                else:
+                    bimpy.button(label)
+
+
+                if bimpy.is_item_hovered(i):
+                    s = "{} ({})\n{}"
+
+                    label = label[0].upper() + label[1:]
+
+                    s = s.format(label,
+                                 str(format(self.confidence[i] * 100, '.2f')) + '%',
+                                 LANG.click_to_view_more)
+
+                    bimpy.set_tooltip(s)
+
+                if bimpy.is_item_active():
+                    print(22)
+                bimpy.pop_id()
+
+
         ########################
 
         t = {
@@ -74,7 +114,29 @@ class image_shower_ui:
 
         return t
 
-    def update_pic(self, im):
+    def update_pic(self, f_name):
         # resize and update pic by message
+        im = Image.open(f_name)
         im = self.i_s.resize(im, self.size.x, self.size.y - 43)
+
+        img = np.asarray(im)
+        self.bbox, self.labels, self.confidence = cv.detect_common_objects(img)
+
+        self.COLORS = np.random.uniform(0, 255, size=(80, 3))
+        self.classes = populate_class_labels()
+
+        for i, label in enumerate(self.labels):
+            color = self.COLORS[self.classes.index(label)]
+            if True:
+                label += ' ' + str(format(self.confidence[i] * 100, '.2f')) + '%'
+
+            cv2.rectangle(img,
+                          (self.bbox[i][0], self.bbox[i][1]),
+                          (self.bbox[i][2], self.bbox[i][3]), color, 2)
+
+            # cv2.putText(img, label,
+            #             (self.bbox[i][0], self.bbox[i][1] - 10),
+            #             cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
+
+        im = img
         self.im = bimpy.Image(im)

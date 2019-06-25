@@ -12,5 +12,7 @@ class conf:
 
     meta_info_height = 85
 
+    show_yolo_confience = False
+
     font = 'SourceCodePro-Bold.ttf'
     font_size = 20
