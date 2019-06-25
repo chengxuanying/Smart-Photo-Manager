@@ -50,6 +50,8 @@ class image_shower_ui:
     scale = bimpy.Float(100.0)
     last_scale = 100.0
 
+    auto = bimpy.Bool(False)
+
     def render(self, ctx, windows_info):
         # calculate autoly
         self.pos = bimpy.Vec2(windows_info['file_brewswer_ui']['x'] +
@@ -71,7 +73,7 @@ class image_shower_ui:
         ###########UI###########
 
         if self.im is not None:
-            bimpy.set_cursor_pos(bimpy.Vec2(0.0, 0.0))
+            bimpy.set_cursor_pos(bimpy.Vec2(0.0, conf.margin * 3))
             bimpy.image(self.im)
 
             # if image is loaded
@@ -115,12 +117,18 @@ class image_shower_ui:
                 self.object_detection()
 
             bimpy.same_line()
+            bimpy.checkbox(LANG.auto, self.auto)
+
+            ### Resize ###
+            bimpy.same_line()
+            bimpy.push_item_width(150)
             bimpy.drag_float(LANG.drag, self.scale,
                              1.0, 10, 1000)
+            bimpy.pop_item_width()
 
-            if self.last_scale != self.scale.value:
+            if abs(self.last_scale - self.scale.value) > 4.:
                 xx = self.size.x * self.scale.value / 100.
-                yy = (self.size.y - 43) * self.scale.value / 100.
+                yy = (self.size.y - 45 - 40) * self.scale.value / 100.
 
                 im = self.i_s.resize(self.raw_im,
                                      xx,
@@ -130,7 +138,6 @@ class image_shower_ui:
 
                 # set to save computation
                 self.last_scale = self.scale.value
-            # if bimpy.button('123') == True:
 
 
         ########################
@@ -156,12 +163,15 @@ class image_shower_ui:
         im = Image.open(f_name)
         self.raw_im = im
 
-        im = self.i_s.resize(im, self.size.x, self.size.y - 43)
+        im = self.i_s.resize(im, self.size.x, self.size.y - 45 - 40)
         self.now_im = im
         self.set_im(im)
 
         # reset
         self.labels = None
+
+        if self.auto.value == True:
+            self.object_detection()
 
     def object_detection(self):
         img = np.asarray(self.now_im)

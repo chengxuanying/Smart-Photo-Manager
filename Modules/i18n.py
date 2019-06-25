@@ -13,6 +13,7 @@ class LANG_EN:
     click_to_view_more = 'View similar images'
     smart_analyse = 'AI Analyse'
     drag = 'Drag to Resize'
+    auto = 'AUTO'
 
     ####meta_info####
     meta_size = 'Size'
