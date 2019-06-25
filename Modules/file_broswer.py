@@ -53,6 +53,8 @@ class file_brewswer_ui:
                     windows_info['image_shower_ui']['self'].update_pic(f_name)
                     windows_info['meta_info_ui']['self'].update_meta_info(f_name)
 
+        s = bimpy.String("12发大水")
+        bimpy.text("Kanjis: \xe6\x97\xa5\xe6\x9c\xac\xe8\xaa\x9e (nihongo)")
 
 
         ########################

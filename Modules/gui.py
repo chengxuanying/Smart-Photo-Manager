@@ -2,6 +2,7 @@
 
 import bimpy
 import time
+import os
 
 from Modules.i18n import LANG_EN as LANG
 from Modules.conf import conf
@@ -30,6 +31,8 @@ class GUI:
         windows_info = {}
 
         while(not self.ctx.should_close()):
+            # os.system('cls')
+
             with self.ctx:
 
                 for i in self.render_list:

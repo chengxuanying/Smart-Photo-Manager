@@ -10,6 +10,7 @@ class LANG_EN:
     ####image_shower####
     image_shower_ui_title = 'Image Displayer'
     click_to_view_more = 'View similar images'
+    smart_analyse = 'AI Analyse'
 
     ####meta_info####
     meta_size = 'Size'

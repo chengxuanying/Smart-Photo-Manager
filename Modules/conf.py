@@ -15,4 +15,5 @@ class conf:
     show_yolo_confience = False
 
     font = 'SourceCodePro-Bold.ttf'
+    font = 'SimHei.ttf'
     font_size = 20

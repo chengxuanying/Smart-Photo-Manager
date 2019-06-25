@@ -3,6 +3,7 @@
 import bimpy
 from PIL import Image
 from geopy.geocoders import Nominatim
+from multiprocessing import Process
 
 from Modules.i18n import LANG_EN as LANG
 from Modules.conf import conf
@@ -111,10 +112,25 @@ class meta_info_ui:
     def update_meta_info(self, f_name):
         self.meta_info = self.er.get_exif_data(Image.open(f_name))
 
+        self.location = LANG.meta_cant_find
+        self.lat = 0.
+        self.lon = 0.
+
+        Process(target=self.get_online_info(), args=()).start()
+
+
+    def get_online_info(self):
         self.lat, self.lon = self.er.get_lat_lon(self.meta_info)
         if self.lat != None:
             self.location = self.geolocator.reverse("{}, {}".format(self.lat, self.lon))
         else:
-            self.location = LANG.meta_cant_find
             self.lat = 0.
             self.lon = 0.
+        # print(self.location)
+
+
+
+
+
+
+

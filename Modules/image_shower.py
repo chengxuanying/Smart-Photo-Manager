@@ -6,6 +6,8 @@ import numpy as np
 import cv2
 import cvlib as cv
 from cvlib.object_detection import populate_class_labels
+import threading
+import time
 
 from Modules.i18n import LANG_EN as LANG
 from Modules.conf import conf
@@ -39,18 +41,20 @@ class image_shower:
 
 class image_shower_ui:
     i_s = image_shower()
+    raw_im = None
     im = None
+    labels = None
 
     def render(self, ctx, windows_info):
         # calculate autoly
-        pos = bimpy.Vec2(windows_info['file_brewswer_ui']['x'] +
+        self.pos = bimpy.Vec2(windows_info['file_brewswer_ui']['x'] +
                          windows_info['file_brewswer_ui']['w'] + conf.margin,
                          conf.margin)
 
-        self.size = bimpy.Vec2(ctx.width() - pos.x - conf.margin,
+        self.size = bimpy.Vec2(ctx.width() - self.pos.x - conf.margin,
                                ctx.height() - 3 * conf.margin - conf.meta_info_height)
 
-        bimpy.set_next_window_pos(pos, bimpy.Condition.Always)
+        bimpy.set_next_window_pos(self.pos, bimpy.Condition.Always)
         bimpy.set_next_window_size(self.size, bimpy.Condition.Always)
 
         bimpy.begin(LANG.image_shower_ui_title, bimpy.Bool(True),
@@ -59,46 +63,50 @@ class image_shower_ui:
                     bimpy.WindowFlags.NoResize)
 
         ###########UI###########
+
         if self.im is not None:
+            bimpy.set_cursor_pos(bimpy.Vec2(0.0, 0.0))
             bimpy.image(self.im)
 
             # if image is loaded
-            for i, label in enumerate(self.labels):
-                color = self.COLORS[self.classes.index(label)]
+            if self.labels is not None:
+                for i, label in enumerate(self.labels):
+                    color = self.COLORS[self.classes.index(label)]
 
+                    # print((self.bbox[i][0], self.bbox[i][1] - 10))
 
+                    # show on the left bottom of the picture
+                    bimpy.set_cursor_pos(bimpy.Vec2(self.bbox[i][0] + 10
+                                                    , self.bbox[i][3] + 10))
 
-                # print((self.bbox[i][0], self.bbox[i][1] - 10))
+                    # set style
+                    bimpy.push_id_int(i)
 
-                # show on the left bottom of the picture
-                bimpy.set_cursor_pos(bimpy.Vec2(self.bbox[i][0] + 10
-                                                , self.bbox[i][3] + 10))
+                    if conf.show_yolo_confience:
+                        bimpy.button(label + ' ' +
+                                     str(format(self.confidence[i] * 100, '.2f')) + '%')
+                    else:
+                        bimpy.button(label)
 
-                # set style
-                bimpy.push_id_int(i)
+                    if bimpy.is_item_hovered(i):
+                        s = "{} ({})\n{}"
 
-                if conf.show_yolo_confience:
-                    bimpy.button(label + ' ' +
-                                 str(format(self.confidence[i] * 100, '.2f')) + '%')
-                else:
-                    bimpy.button(label)
+                        label = label[0].upper() + label[1:]
 
+                        s = s.format(label,
+                                     str(format(self.confidence[i] * 100, '.2f')) + '%',
+                                     LANG.click_to_view_more)
 
-                if bimpy.is_item_hovered(i):
-                    s = "{} ({})\n{}"
+                        bimpy.set_tooltip(s)
 
-                    label = label[0].upper() + label[1:]
+                    if bimpy.is_item_active():
+                        print(22)
+                    bimpy.pop_id()
 
-                    s = s.format(label,
-                                 str(format(self.confidence[i] * 100, '.2f')) + '%',
-                                 LANG.click_to_view_more)
+            bimpy.set_cursor_pos(bimpy.Vec2(conf.margin, self.size.y - conf.margin * 2))
+            if bimpy.button(LANG.smart_analyse) == True:
 
-                    bimpy.set_tooltip(s)
-
-                if bimpy.is_item_active():
-                    print(22)
-                bimpy.pop_id()
-
+                self.object_detection()
 
         ########################
 
@@ -118,8 +126,15 @@ class image_shower_ui:
         # resize and update pic by message
         im = Image.open(f_name)
         im = self.i_s.resize(im, self.size.x, self.size.y - 43)
+        self.raw_im = im
+        self.set_im(im)
 
-        img = np.asarray(im)
+        # reset
+        self.labels = None
+
+    def object_detection(self):
+        img = np.asarray(self.raw_im)
+
         self.bbox, self.labels, self.confidence = cv.detect_common_objects(img)
 
         self.COLORS = np.random.uniform(0, 255, size=(80, 3))
@@ -138,5 +153,7 @@ class image_shower_ui:
             #             (self.bbox[i][0], self.bbox[i][1] - 10),
             #             cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
 
-        im = img
+        self.set_im(img)
+
+    def set_im(self, im):
         self.im = bimpy.Image(im)
