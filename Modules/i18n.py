@@ -44,3 +44,6 @@ class LANG_EN:
                     '\n' \
                     'Author: Chengxuan, Ying\n' \
                     'Last Update: 6.25.2019'
+
+if __name__=='__main__':
+    print(LANG_EN().about_content)
