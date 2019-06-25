@@ -2,7 +2,8 @@
 
 import bimpy
 from glob import glob
-
+from multiprocessing import Process
+import time
 
 from Modules.i18n import LANG_EN as LANG
 from Modules.conf import conf
@@ -10,9 +11,8 @@ from Modules.conf import conf
 
 class file_broswer:
     file_list = []
-
     def __init__(self):
-        pass
+        self.refresh_file_list()
 
     def refresh_file_list(self):
         self.file_list = glob('pictures\*.*')
@@ -40,8 +40,16 @@ class file_brewswer_ui:
                     bimpy.WindowFlags.NoMove)
 
         ###########UI###########
+        if bimpy.button(LANG.file_brewswer_ui_refresh) == True:
+            self.fb.refresh_file_list()
 
-        self.fb.refresh_file_list()
+        bimpy.same_line()
+        if bimpy.button(LANG.about) == True:
+            bimpy.open_popup(LANG.about)
+
+        # call render about ui
+        # print(dir(windows_info['about_ui']))
+        windows_info['about_ui']['self'].about()
 
         for idx, f_name in enumerate(self.fb.file_list):
             # print(self.selected.value)
@@ -53,10 +61,6 @@ class file_brewswer_ui:
                     windows_info['image_shower_ui']['self'].update_pic(f_name)
                     windows_info['meta_info_ui']['self'].update_meta_info(f_name)
 
-        s = bimpy.String("12发大水")
-        bimpy.text("Kanjis: \xe6\x97\xa5\xe6\x9c\xac\xe8\xaa\x9e (nihongo)")
-
-
         ########################
 
         t = {
@@ -64,7 +68,7 @@ class file_brewswer_ui:
             'y': bimpy.get_window_pos().y,
             'w': bimpy.get_window_size().x,
             'h': bimpy.get_window_size().y,
-            'self' : self,
+            'self': self,
         }
 
         bimpy.end()

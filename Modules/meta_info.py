@@ -116,7 +116,15 @@ class meta_info_ui:
         self.lat = 0.
         self.lon = 0.
 
-        Process(target=self.get_online_info(), args=()).start()
+        self.lat, self.lon = self.er.get_lat_lon(self.meta_info)
+        if self.lat != None:
+            pass
+            # self.location = self.geolocator.reverse("{}, {}".format(self.lat, self.lon))
+        else:
+            self.lat = 0.
+            self.lon = 0.
+
+        # Process(target=self.get_online_info(), args=()).start()
 
 
     def get_online_info(self):

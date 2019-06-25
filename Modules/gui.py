@@ -39,7 +39,9 @@ class GUI:
                     windows_info[i.__class__.__name__] = i.render(self.ctx, windows_info)
                 # print(windows_info)
 
+                # add gui manager as a window class for global calls
+                windows_info[self.__class__.__name__] = self
                 self.ctx.render()
 
-
+                # lower cpu usage
                 time.sleep(0.02)
