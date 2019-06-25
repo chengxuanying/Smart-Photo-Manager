@@ -2,20 +2,33 @@
 
 import bimpy
 from glob import glob
-from multiprocessing import Process
-import time
+from multiprocessing import Process, Queue
 
 from Modules.i18n import LANG_EN as LANG
 from Modules.conf import conf
+from Modules.preprocess import preprocess
 
 
 class file_broswer:
     file_list = []
+    q = Queue()
+
     def __init__(self):
         self.refresh_file_list()
 
     def refresh_file_list(self):
         self.file_list = glob('pictures\*.*')
+
+    def startprocess(self):
+        self.pp = preprocess()
+        self.pp.update_file_list(self.file_list)
+
+        p = Process(target=self.preprocess, args=(self.pp, self.q))
+        p.start()
+
+    def preprocess(self, p=None, q=None):
+        for i in p.process():
+            q.put(i)
 
 
 class file_brewswer_ui:
@@ -24,8 +37,10 @@ class file_brewswer_ui:
     selected = bimpy.Int(-1)
 
     im = None
+    process = (0, len(fb.file_list))
 
     def render(self, ctx, windows_info):
+
         pos = bimpy.Vec2(conf.margin, conf.margin)
         size_min = bimpy.Vec2(conf.min_file_browser_width,
                               ctx.height() - 2 * conf.margin)
@@ -61,6 +76,19 @@ class file_brewswer_ui:
                     windows_info['image_shower_ui']['self'].update_pic(f_name)
                     windows_info['meta_info_ui']['self'].update_meta_info(f_name)
 
+        # progress bar
+        if not self.fb.q.empty():
+            self.process = self.fb.q.get()
+            self.process = (self.process[0] + 1, self.process[1])
+
+        sz = bimpy.get_window_size()
+        bimpy.set_cursor_pos(bimpy.Vec2(conf.margin, sz.y - conf.margin * 2))
+        bimpy.push_item_width(sz.x - conf.margin * 2)
+
+        process = self.process
+        bimpy.progress_bar(process[0] / float(process[1]),
+                           bimpy.Vec2(0.0, 0.0),
+                           "{}/{}".format(process[0], process[1]))
         ########################
 
         t = {

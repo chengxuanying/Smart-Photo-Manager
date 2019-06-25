@@ -33,7 +33,7 @@ class LANG_EN:
     about = 'About'
     about_close = 'Close'
     about_content = 'The Smart Picture Manager (SPM) embraces the ' \
-                    'recent advances of deep learning (DL), and provide ' \
+                    'recent advances of deep learning (DL), and provides ' \
                     'a unified software experience for managing personal photos. \n\n ' \
                     'Features of SMP:\n' \
                     '* Easy-to-use User Interaction\n' \

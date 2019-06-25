@@ -140,6 +140,7 @@ class image_shower_ui:
                 self.last_scale = self.scale.value
 
 
+
         ########################
 
         t = {
