@@ -35,7 +35,20 @@ The Smart Photo Manager (**SPM**) embraces the recent advances of deep learning 
 * **MultiLanguage**: Provide "i18n.py" for localiztion.
 
 ### Screenshots
+**Main Window**
 #### ![screemshot1](README_RES/screemshot1.png)
+
+**Photo In AI**: Auto detect the objects in yout photos 
+#### ![ai_analysis](README_RES/ai_analysis.gif)
+
+**AI Search**: Search the photos with same objects
+#### ![ai_search](README_RES/ai_search.gif)
+
+**Auto Layout**: Calculate the real-time postions for every subwindow 
+#### ![auto_layout](README_RES/auto_layout.gif)
+
+**Resize Photo**: Drag to resize the photo from 10% to 1000%
+#### ![resize](README_RES/resize.gif)
 
 ## Usage
 
