@@ -45,12 +45,14 @@ class image_shower_ui:
     im = None
     labels = None
 
-    now_im =None
+    now_im = None
 
     scale = bimpy.Float(100.0)
     last_scale = 100.0
 
     auto = bimpy.Bool(False)
+
+    select_label = ''
 
     def render(self, ctx, windows_info):
         # calculate autoly
@@ -71,6 +73,7 @@ class image_shower_ui:
                     bimpy.WindowFlags.HorizontalScrollbar)
 
         ###########UI###########
+        # modal part
 
         if self.im is not None:
             bimpy.set_cursor_pos(bimpy.Vec2(0.0, conf.margin * 3))
@@ -108,7 +111,8 @@ class image_shower_ui:
                         bimpy.set_tooltip(s)
 
                     if bimpy.is_item_active():
-                        print(22)
+                        self.select_label = label
+
                     bimpy.pop_id()
 
             # bimpy.set_cursor_pos(bimpy.Vec2(conf.margin, self.size.y - conf.margin * 2))
@@ -139,7 +143,16 @@ class image_shower_ui:
                 # set to save computation
                 self.last_scale = self.scale.value
 
+        # if selected obj
+        if self.select_label != '':
+            # print(self.select_label)
+            windows_info['retrival_ui']['self'].select_label = self.select_label
+            bimpy.open_popup('{}: {}'.format(LANG.retrieve, self.select_label))
 
+            # reset
+            self.select_label = ''
+
+        windows_info['retrival_ui']['self'].retrival()
 
         ########################
 

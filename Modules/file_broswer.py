@@ -100,6 +100,9 @@ class file_brewswer_ui:
                 with open('yolo_res', 'wb') as f:
                     pickle.dump(self.fb.pp.yolo_res, f)
 
+                # build retrieval index
+                windows_info['retrival_ui']['self'].init = False
+
         sz = bimpy.get_window_size()
         bimpy.set_cursor_pos(bimpy.Vec2(conf.margin, sz.y - conf.margin * 2))
         bimpy.push_item_width(sz.x - conf.margin * 3 - 60)

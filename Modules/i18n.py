@@ -10,7 +10,7 @@ class LANG_EN:
 
     ####image_shower####
     image_shower_ui_title = 'Image Displayer'
-    click_to_view_more = 'View similar images'
+    click_to_view_more = 'Show Similar Objects'
     smart_analyse = 'AI Analyse'
     drag = 'Drag to Resize'
     auto = 'AUTO'
@@ -28,6 +28,10 @@ class LANG_EN:
     meta_GPS = 'GPS'
     meta_location = 'Location'
     meta_cant_find = 'None'
+
+    ###retrieve###
+    retrieve = 'Similar Objects'
+    retrieve_close = 'Close'
 
 
     ###about###

@@ -6,9 +6,12 @@ from multiprocessing import Process
 import time
 import pickle
 
+from Modules.image_shower import image_shower
+
 class preprocess:
     file_list = []
     yolo_res = {}
+    i_s = image_shower()
 
     def update_file_list(self, f_list):
         self.file_list = f_list
@@ -18,7 +21,10 @@ class preprocess:
         for idx, f in enumerate(self.file_list):
             d = {}
             if f not in self.yolo_res:
-                img = np.asarray(Image.open(f))
+                img = Image.open(f)
+                img = self.i_s.resize(img, 720, 720)
+                img = np.asarray(img)
+
                 bbox, labels, confidence = cv.detect_common_objects(img)
 
                 d = {
