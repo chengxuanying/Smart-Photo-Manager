@@ -32,6 +32,14 @@ class file_broswer:
             q.put(i)
 
 
+    def refresh(self):
+        self.pp.yolo_res = {}
+        q = Queue()
+        self.pp.update_file_list(self.file_list)
+
+        self.startprocess()
+
+
 class file_brewswer_ui:
     fb = file_broswer()
     preidx = -1
@@ -94,12 +102,17 @@ class file_brewswer_ui:
 
         sz = bimpy.get_window_size()
         bimpy.set_cursor_pos(bimpy.Vec2(conf.margin, sz.y - conf.margin * 2))
-        bimpy.push_item_width(sz.x - conf.margin * 2)
+        bimpy.push_item_width(sz.x - conf.margin * 3 - 60)
 
         process = self.process
         bimpy.progress_bar(process[0] / float(process[1]),
                            bimpy.Vec2(0.0, 0.0),
                            "{}/{}".format(process[0], process[1]))
+
+        bimpy.same_line()
+        if bimpy.button(LANG.reindex) == True and process[0] == process[1]:
+            self.fb.refresh()
+
         ########################
 
         t = {

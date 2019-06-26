@@ -31,13 +31,13 @@ The Smart Photo Manager (**SPM**) embraces the recent advances of deep learning 
 * **Photo In AI**: Organize your personal photos in as much as **80** classes
 * **One-Key-Search**: If you want to locate similar photos, click "AI analyse" and choose the object you want to retrieve.
 * **User-Friendly**: Clear and adjustable layout, Fresh UI
-* **MetaInfo**: Describing the photo with details like size, data, focal time and etc.
+* **MetaInfo**: Describe the photo with details like size, data, focal time and etc.
 * **MultiLanguage**: Provide "i18n.py" for localiztion.
 
 ### Screenshots
 #### ![screemshot1](README_RES/screemshot1.png)
 
-- ## Usage
+## Usage
 
 
 ### Prerequisites

@@ -14,6 +14,7 @@ class LANG_EN:
     smart_analyse = 'AI Analyse'
     drag = 'Drag to Resize'
     auto = 'AUTO'
+    reindex = 'ReIndex'
 
     ####meta_info####
     meta_size = 'Size'
